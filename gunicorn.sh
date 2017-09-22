@@ -1,7 +1,7 @@
 
 #!/bin/bash 
 set -e 
-cd /app
+cd /workspace
 echo "============"
 echo $PWD
 echo "============"
