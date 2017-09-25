@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "MNIST-APP",
+        "name": "mnistapp",
         "annotations": {
             "description": "MNIST App for tensorflow server",
             "tags": "mnist-app"
@@ -79,11 +79,11 @@
                                  "env": [
                                         {
                                             "name": "PREDICTION_HOST1",
-                                            "value": "${PREDICTION_HOST1}"
+                                            "value": "${PREDICTION_SERVICE1}"
                                         },
                                         {
                                             "name": "PREDICTION_HOST2",
-                                            "value": "${PREDICTION_HOST2}"
+                                            "value": "${PREDICTION_SERVICE2}"
                                         },
                                         {
                                             "name": "PREDICTION_PORT1",
@@ -171,15 +171,15 @@
             "required": true
         },
         {
-            "name": "PREDICTION_HOST1",
-            "description": "Host IP of tf endpoint(regression).",
+            "name": "PREDICTION_SERVICE1",
+            "description": "Service name of prediction endpoint(regression).",
             "value": "0.0.0.0",
             "from": "[.0-9]",
             "required": true
         },
         {
-            "name": "PREDICTION_HOST2",
-            "description": "Host IP of tf endpoint(cnn).",
+            "name": "PREDICTION_SERVICE2",
+            "description": "Service name of prediction endpoint(cnn).",
             "value": "0.0.0.0",
             "from": "[.0-9]",
             "required": true

@@ -36,6 +36,9 @@ def model1(image):
     final = np.array(finalresult["outputs"]["scores"]["floatVal"])
     return final
 
+def softmax(x):
+    """Compute softmax values for each sets of scores in x."""
+    return np.exp(x) / np.sum(np.exp(x), axis=0)
 
 def model2(image):
     host = os.environ.get('PREDICTION_HOST2', '0.0.0.0')
@@ -46,7 +49,7 @@ def model2(image):
     request.model_spec.name = "mnist"
     request.model_spec.signature_name = 'predict_images'
     request.inputs['keep_prob'].dtype = types_pb2.DT_FLOAT
-    request.inputs['keep_prob'].float_val.append(0.5)
+    request.inputs['keep_prob'].float_val.append(1.0)
     request.inputs['images'].CopyFrom(tf.contrib.util.make_tensor_proto(image, shape=[1, image.size]))
     result = []
     try:
@@ -85,7 +88,7 @@ def mnist():
     prediction2 = np.argmax(resultlist2)
     print prediction2
     output1 = resultlist1.flatten().tolist()
-    output2 = resultlist2.flatten().tolist()
+    output2 = softmax(resultlist2.flatten().tolist()).tolist()
     return jsonify(results=[output1, output2])
 
 
