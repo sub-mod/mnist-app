@@ -45,7 +45,7 @@ class Main {
     onMouseMove(e) {
         if (this.drawing) {
             var curr = this.getPosition(e.clientX, e.clientY);
-            this.ctx.lineWidth = 45;
+            this.ctx.lineWidth = 32;
             this.ctx.lineCap = 'round';
             this.ctx.beginPath();
             this.ctx.moveTo(this.prev.x, this.prev.y);
