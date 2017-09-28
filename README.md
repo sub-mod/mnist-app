@@ -9,3 +9,4 @@
 
 docker build -t submod/mnist-app -f Dockerfile_final .
 
+credits: @sugyan
