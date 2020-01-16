@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": "6.x" 
+    "node": "6.x"
   },
   "dependencies": {
     "babel-preset-es2015": "^6.1.18",
