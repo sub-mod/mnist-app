@@ -73,20 +73,20 @@ app = Flask(__name__)
 @app.route('/api/mnist', methods=['POST'])
 def mnist():
     input = ((255 - np.array(request.json, dtype=np.uint8)) / 255.0).reshape(1, 784)
-    print "------------"
-    print request.json
-    print "------------"
+    print("------------")
+    print(request.json)
+    print("------------")
 
-    print os.environ.get('PREDICTION_HOST2', '0.0.0.0')
-    print os.environ.get('PREDICTION_HOST1', '0.0.0.0')
+    print(os.environ.get('PREDICTION_HOST2', '0.0.0.0'))
+    print(os.environ.get('PREDICTION_HOST1', '0.0.0.0'))
     image = np.array(input[0],dtype=np.dtype('float32'))
 
     resultlist1 = model1(image)
     resultlist2 = model2(image)
     prediction1 = np.argmax(resultlist1)
-    print prediction1
+    print(prediction1)
     prediction2 = np.argmax(resultlist2)
-    print prediction2
+    print(prediction2)
     output1 = resultlist1.flatten().tolist()
     output2 = softmax(resultlist2.flatten().tolist()).tolist()
     return jsonify(results=[output1, output2])

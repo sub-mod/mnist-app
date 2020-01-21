@@ -7,7 +7,7 @@
 
 # dockerbuild
 
-docker build -t submod/mnist-app -f Dockerfile_final .
+docker build -t submod/mnist-app -f Dockerfile.nodejs .
 
 
 # Integration With OpenShift

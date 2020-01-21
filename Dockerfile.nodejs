@@ -1,0 +1,71 @@
+FROM registry.access.redhat.com/ubi7/nodejs-10
+
+MAINTAINER Subin Modeel
+
+USER root
+
+ENV TINI_VERSION=v0.18.0 \
+    PATH=$HOME/.local/bin/:$PATH \
+    LANGUAGE=en_US.UTF-8 \
+    LANG=en_US.UTF-8 \
+    PYTHONIOENCODING=UTF-8
+
+LABEL io.k8s.description="MNIST tensorflow App." \
+      io.k8s.display-name="MNIST tensorflow App" \
+      io.openshift.expose-services="8000:http"
+
+RUN yum -y install tar xz zip unzip yum-utils gcc curl wget openssh-clients bind-utils which openssl sudo rh-python36 rh-python36-python-devel && \
+    source scl_source enable rh-nodejs${NODEJS_VERSION} rh-python36 && \
+    node --version && \
+    npm --version && \
+    python -V && \
+	which python && \
+    echo "PYTHON_H="`rpm -ql rh-python36-python-devel | grep Python.h` && \
+    curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py" && \
+    pip install --upgrade pip && \
+    rm -rf /var/cache/yum/*  && \
+    rm -rf /root/.cache  && \
+    rm -rf /var/cache/yum/*  && \
+    yum -y clean all
+    
+RUN wget https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini -P /tmp \
+    && wget https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc -P /tmp \
+    && cd /tmp \
+    && \
+    TINI_GPGKEY=595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7; \
+    found=''; \
+    for server in \
+        ha.pool.sks-keyservers.net \
+        hkp://keyserver.ubuntu.com:80 \
+        hkp://p80.pool.sks-keyservers.net:80 \
+        pgp.mit.edu \
+    ; do \
+        echo "Fetching GPG key $TINI_GPGKEY from $server"; \
+        gpg --batch --keyserver "$server" --recv-keys "$TINI_GPGKEY" && found=yes && break; \
+    done; \
+    test -z "$found" && echo >&2 "ERROR: failed to fetch GPG key $TINI_GPGKEY" && exit 1; \
+    gpg --batch --verify /tmp/tini.asc /tmp/tini \
+    && mv /tmp/tini /usr/local/bin/tini \
+    && chmod +x /usr/local/bin/tini
+
+COPY . /opt/app-root/src/
+COPY main.py /opt/app-root/src/
+COPY requirements.txt /opt/app-root/src/
+COPY app.sh /opt/app-root/src/
+COPY etc/scl_enable /opt/app-root/etc/
+ADD entrypoint /entrypoint
+
+RUN source scl_source enable rh-nodejs${NODEJS_VERSION} rh-python36 && \
+    pip install -r requirements.txt && \
+    npm install && \
+    npm install gulp -g && \
+    gulp build && \
+    chmod a+x app.sh
+
+EXPOSE 8000 5000
+
+ENTRYPOINT ["/entrypoint"]
+CMD ["/opt/app-root/src/app.sh"]
+
+# Switch to the user 
+USER 1001
