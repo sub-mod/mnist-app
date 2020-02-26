@@ -87,11 +87,11 @@
                                         },
                                         {
                                             "name": "PREDICTION_PORT1",
-                                            "value": "6006"
+                                            "value": "${PREDICTION_PORT1}"
                                         },
                                         {
                                             "name": "PREDICTION_PORT2",
-                                            "value": "6006"
+                                            "value": "${PREDICTION_PORT2}"
                                         }
                                 ],
                                 "image": "${APPLICATION_NAME}:latest",
@@ -182,6 +182,20 @@
             "description": "Service name of prediction endpoint(cnn).",
             "value": "0.0.0.0",
             "from": "[.0-9]",
+            "required": true
+        },
+        {
+            "name": "PREDICTION_PORT1",
+            "description": "port of prediction endpoint(regression).",
+            "value": "6006",
+            "from": "[0-9]",
+            "required": true
+        },
+        {
+            "name": "PREDICTION_PORT2",
+            "description": "port of prediction endpoint(cnn).",
+            "value": "6006",
+            "from": "[0-9]",
             "required": true
         }
     ]
